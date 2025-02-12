@@ -1,0 +1,20 @@
+[project]
+name = "career-management-system"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "pradhap1125",email = "pradhapreee@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flask (>=3.1.0,<4.0.0)",
+    "flask-sqlalchemy (>=3.1.1,<4.0.0)",
+    "psycopg2 (>=2.9.10,<3.0.0)",
+    "asyncpg (>=0.30.0,<0.31.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
