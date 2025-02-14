@@ -58,4 +58,6 @@ def search_resume(keyword):
     faiss.normalize_L2(emb_res)
     results = search_faiss_index(index, emb_res, filenames)
 
-    return results
+    return list(set(results))
+
+initial_vector_load()

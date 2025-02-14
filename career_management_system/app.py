@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
-from psycopg_pool import ConnectionPool
 
 from career_management_system import dbService
+from career_management_system.dbService import execute_query
 from career_management_system.pdf_processor import process_pdf
 from career_management_system.resume_search import search_resume
+from career_management_system.sql_generation_llm import generate_sql, is_valid_sql
 
 app = Flask(__name__)
 
@@ -30,7 +31,7 @@ def update_applicant(user_id):
 def delete_applicant(user_id):
     return dbService.delete_applicant(user_id)
 
-@app.route('/app/uploadresume', methods=['POST'])
+@app.route('/api/uploadresume', methods=['POST'])
 def upload_pdf():
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
@@ -43,10 +44,19 @@ def upload_pdf():
 
     return process_pdf(file)
 
-@app.route('/app/searchresume', methods=['POST'])
+@app.route('/api/searchresume', methods=['POST'])
 def search():
     data = request.get_json()
     return search_resume(data['keywords'])
+
+@app.route('/api/generatesql', methods=['POST'])
+def generateSql():
+    data = request.get_json()
+    sql=generate_sql(data['query'])
+    if is_valid_sql(sql):
+        return execute_query(sql)
+    else:
+        return sql
 
 if __name__ == "__main__":
     app.run(debug=True)

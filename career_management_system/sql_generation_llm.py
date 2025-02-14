@@ -1,6 +1,7 @@
 from langchain_community.llms import Ollama
 from langchain.prompts import PromptTemplate
 from SQL_Prompt import SQL_PROMPT
+import sqlparse
 
 
 def generate_sql(user_query, history=[]):
@@ -24,8 +25,14 @@ def generate_sql(user_query, history=[]):
 
     # Append current interaction to history
     history.append((user_query, response))
+    return response
 
-    return response, history
+def is_valid_sql(query: str) -> bool:
+    try:
+        parsed = sqlparse.parse(query)
+        return bool(parsed)
+    except Exception:
+        return False
 
 
 if __name__ == "__main__":

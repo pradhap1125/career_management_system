@@ -161,7 +161,8 @@ Instructions:
 - Maintain conversational context to answer follow-up queries.
 - If query details are ambiguous, ask for clarification instead of assuming.
 - Use JOINs where necessary to connect related tables.
-- Your response should be a python dictionary and the query should be stored in the sql_query key.
+- Your response should only contain the query and should not contain any natural language like "The query is..." or "Please find the query...".
+- Response should match the examples exactly.
 
 Few-Shot Examples:
 
