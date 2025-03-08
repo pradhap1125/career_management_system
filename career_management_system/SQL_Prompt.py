@@ -116,6 +116,7 @@ CREATE TABLE Applicant_experience (
     id SERIAL PRIMARY KEY,
     applicant_id INT REFERENCES Applicant_data(id), -- Foreign key referencing applicant
     company_id INT REFERENCES Company_master(id), -- Foreign key referencing company
+    job_title VARCHAR(255) NOT NULL, -- Job title
     start_date DATE NOT NULL,
     end_date DATE, -- Can be NULL if currently working
     create_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

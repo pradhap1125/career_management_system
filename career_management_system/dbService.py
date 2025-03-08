@@ -18,35 +18,35 @@ def get_applicants(user_id=None):
                 for a in applicants:
                     education, experience, skills, certifications=get_entities(a[0])
                     json_list.append(
-                    jsonify(
+
                         {"id": a[0], "first_name": a[1], "last_name": a[2], "email_id": a[3], "phone": a[4],
                          "address": a[5], "location_id": a[6],
-                         "education": [{"id": e[0], "education_id": e[1], "degree_id": e[2], "major_id": e[3],
+                         "education": [{"id": e[0], "institute_name": e[1], "degree": e[2], "major": e[3],
                                         "start_date": e[4], "end_date": e[5]} for e in education],
                          "experience": [
-                             {"id": e[0], "company_id": e[1], "title": e[2], "start_date": e[3], "end_date": e[4]}
+                             {"id": e[0], "company": e[1], "title": e[2], "start_date": e[3], "end_date": e[4]}
                              for e in experience],
-                         "skills": [{"id": s[0], "skill_id": s[1]} for s in skills],
-                         "certifications": [{"id": c[0], "certification_id": c[1], "issuing_date": c[2]} for c in
+                         "skills": [{"id": s[0], "skill_name": s[1]} for s in skills],
+                         "certifications": [{"id": c[0], "certification_name": c[1], "issuing_date": c[2]} for c in
                                             certifications]
                          }
-                    ))
-                return json.dumps(json_list)
+                    )
+                return jsonify(json_list)
 
             else:
                 cur.execute("SELECT * FROM Applicant_data WHERE id = %s;", (user_id,))
                 a = cur.fetchone()
                 education, experience, skills, certifications = get_entities(user_id)
-                jsonify(
+                return jsonify(
                     {"id": a[0], "first_name": a[1], "last_name": a[2], "email_id": a[3], "phone": a[4],
                      "address": a[5], "location_id": a[6],
-                     "education": [{"id": e[0], "education_id": e[1], "degree_id": e[2], "major_id": e[3],
+                     "education": [{"id": e[0], "institute_name": e[1], "degree": e[2], "major": e[3],
                                     "start_date": e[4], "end_date": e[5]} for e in education],
                      "experience": [
-                         {"id": e[0], "company_id": e[1], "title": e[2], "start_date": e[3], "end_date": e[4]}
+                         {"id": e[0], "company": e[1], "title": e[2], "start_date": e[3], "end_date": e[4]}
                          for e in experience],
-                     "skills": [{"id": s[0], "skill_id": s[1]} for s in skills],
-                     "certifications": [{"id": c[0], "certification_id": c[1], "issuing_date": c[2]} for c in
+                     "skills": [{"id": s[0], "skill_name": s[1]} for s in skills],
+                     "certifications": [{"id": c[0], "certification_name": c[1], "issuing_date": c[2]} for c in
                                         certifications]
                      }
                 )
@@ -55,29 +55,32 @@ def get_entities(user_id):
     with pool.connection() as conn:
         with conn.cursor() as cur:
             cur.execute("""
-                SELECT e.id, e.education_id, e.degree_id, e.major_id, e.start_date, e.end_date
-                FROM Applicant_education e
+                SELECT e.id, u.institute_name, d.name, m.major_name, e.start_date, e.end_date
+                FROM Applicant_education e left join university_master u on e.education_id = u.id
+                left join degree_master d on e.degree_id = d.id
+                left join major_master m on e.major_id = m.id
                 WHERE e.applicant_id = %s;
             """, (user_id,))
             education = cur.fetchall()
 
             cur.execute("""
-                SELECT e.id, e.company_id, e.title, e.start_date, e.end_date
+                SELECT e.id, c.name, e.job_title, e.start_date, e.end_date
                 FROM Applicant_experience e
+                left join company_master c on e.company_id = c.id
                 WHERE e.applicant_id = %s;
             """, (user_id,))
             experience = cur.fetchall()
 
             cur.execute("""
-                SELECT s.id, s.skill_id
-                FROM Applicant_skills s
+                SELECT s.id, sm.name
+                FROM Applicant_skills s left join skills_master sm on s.skill_id = sm.id
                 WHERE s.applicant_id = %s;
             """, (user_id,))
             skills = cur.fetchall()
 
             cur.execute("""
-                SELECT c.id, c.certification_id, c.issuing_date
-                FROM Applicant_Certification c
+                SELECT c.id, cm.name, c.given_date
+                FROM Applicant_Certification c left join certification_master cm on c.certification_id = cm.id
                 WHERE c.applicant_id = %s;
             """, (user_id,))
             certifications = cur.fetchall()
@@ -103,9 +106,9 @@ def create_applicants(data):
 
             for exp in data.get('experience', []):
                 cur.execute("""
-                            INSERT INTO Applicant_experience (applicant_id, company_id, start_date, end_date)
-                            VALUES (%s, %s, %s, %s);
-                        """, (user_id, exp['company_id'], exp['start_date'], exp.get('end_date', None)))
+                            INSERT INTO Applicant_experience (applicant_id, company_id,job_title, start_date, end_date)
+                            VALUES (%s, %s, %s, %s,%s);
+                        """, (user_id, exp['company_id'],exp['job_title'], exp['start_date'], exp.get('end_date', None)))
 
             for skill in data.get('skills', []):
                 cur.execute("""
@@ -144,9 +147,9 @@ def update_applicant(user_id,data):
                 cur.execute("DELETE FROM Applicant_experience WHERE applicant_id = %s;", (user_id,))
                 for exp in data['experience']:
                     cur.execute("""
-                        INSERT INTO Applicant_experience (applicant_id, company_id, start_date, end_date)
+                        INSERT INTO Applicant_experience (applicant_id, company_id,job_title, start_date, end_date)
                         VALUES (%s, %s, %s, %s);
-                    """, (user_id, exp['company_id'], exp['start_date'], exp.get('end_date', None)))
+                    """, (user_id, exp['company_id'],exp['job_title'], exp['start_date'], exp.get('end_date', None)))
 
             if 'skills' in data:
                 cur.execute("DELETE FROM Applicant_skills WHERE applicant_id = %s;", (user_id,))
@@ -190,3 +193,62 @@ def execute_query(query):
         with conn.cursor() as cur:
             cur.execute(query)
             return cur.fetchall()
+
+def skill_master():
+    with pool.connection()  as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, name FROM skills_master")
+            skills=cur.fetchall()
+            json_list= [{"id": s[0], "name": s[1]} for s in skills]
+            return jsonify(json_list)
+
+def location_master():
+    with pool.connection()  as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, name FROM location_master")
+            location = cur.fetchall()
+            json_list = [{"id": s[0], "name": s[1]} for s in location]
+            return jsonify(json_list)
+
+def education_master():
+    with pool.connection()  as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, institute_name FROM university_master")
+            education = cur.fetchall()
+            json_list = [{"id": s[0], "name": s[1]} for s in education]
+            return jsonify(json_list)
+
+def degree_master():
+    with pool.connection()  as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, name FROM degree_master")
+            degree = cur.fetchall()
+            json_list =  [{"id": s[0], "name": s[1]} for s in degree]
+            return jsonify(json_list)
+
+def major_master():
+    with pool.connection()  as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, major_name FROM major_master")
+            major = cur.fetchall()
+            json_list = [{"id": s[0], "name": s[1]} for s in major]
+
+            return jsonify(json_list)
+def company_master():
+    with pool.connection()  as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, name FROM company_master")
+            company = cur.fetchall()
+
+            json_list= [{"id": s[0], "name": s[1]} for s in company]
+
+            return jsonify(json_list)
+
+def certification_master():
+    with pool.connection()  as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, name FROM certification_master")
+            certification = cur.fetchall()
+            json_list =  [{"id": s[0], "name": s[1]} for s in certification]
+
+            return jsonify(json_list)

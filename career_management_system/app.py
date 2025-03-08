@@ -49,14 +49,42 @@ def search():
     data = request.get_json()
     return search_resume(data['keywords'])
 
-@app.route('/api/generatesql', methods=['POST'])
+@app.route('/api/generateData', methods=['POST'])
 def generateSql():
     data = request.get_json()
-    sql=generate_sql(data['query'])
-    if is_valid_sql(sql):
-        return execute_query(sql)
+    generated_txt=generate_sql(data['query'])
+    if is_valid_sql(generated_txt):
+        return execute_query(generated_txt)
     else:
-        return sql
+        return generated_txt
+
+@app.route('/api/skillmaster', methods=['GET'])
+def skill_master():
+    return dbService.skill_master()
+
+@app.route('/api/educationmaster', methods=['GET'])
+def education_master():
+    return dbService.education_master()
+
+@app.route('/api/companymaster', methods=['GET'])
+def company_master():
+    return dbService.experience_master()
+
+@app.route('/api/certificationmaster', methods=['GET'])
+def certification_master():
+    return dbService.certification_master()
+
+@app.route('/api/majormaster', methods=['GET'])
+def major_master():
+    return dbService.major_master()
+
+@app.route('/api/locationmaster', methods=['GET'])
+def location_master():
+    return dbService.location_master()
+
+@app.route('/api/degreemaster', methods=['GET'])
+def degree_master():
+    return dbService.degree_master()
 
 if __name__ == "__main__":
     app.run(debug=True)
