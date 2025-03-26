@@ -156,6 +156,7 @@ CREATE TABLE Applicant_Certification (
 
 ## Instructions:
 - Generate **only the SQL SELECT query** as output.
+- Your response should **only contain the query and should not contain any natural language** (e.g., "The query is...", "Please find the query...")
 - **Use proper JOINs** when querying across multiple tables.
 - **Avoid unnecessary columns** and select only what is required.
 - **Use COALESCE()** where necessary to handle NULL values (e.g., `end_date`).
