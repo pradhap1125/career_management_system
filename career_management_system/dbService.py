@@ -1,5 +1,6 @@
 import json
 
+import pandas as pd
 from flask import jsonify
 from psycopg_pool import ConnectionPool
 
@@ -192,7 +193,10 @@ def execute_query(query):
     with pool.connection()  as conn:
         with conn.cursor() as cur:
             cur.execute(query)
-            return cur.fetchall()
+            data = cur.fetchall()
+            columns = [desc[0] for desc in cur.description]  # Extract column names
+            df = pd.DataFrame(data, columns=columns)
+            return df.to_json(orient='records')
 
 def skill_master():
     with pool.connection()  as conn:
