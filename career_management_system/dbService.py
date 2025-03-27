@@ -21,7 +21,7 @@ def get_applicants(user_id=None):
                     json_list.append(
 
                         {"id": a[0], "first_name": a[1], "last_name": a[2], "email_id": a[3], "phone": a[4],
-                         "address": a[5], "location_id": a[6],
+                         "address": a[5], "location_id": a[6],"resume_name": a[9],
                          "education": [{"id": e[0], "institute_name": e[1], "degree": e[2], "major": e[3],
                                         "start_date": e[4], "end_date": e[5]} for e in education],
                          "experience": [
@@ -92,10 +92,10 @@ def create_applicants(data):
     with pool.connection()  as conn:
         with conn.cursor() as cur:
             cur.execute("""
-                INSERT INTO Applicant_data (first_name, last_name, email_id, phone, address, location_id)
-                VALUES (%s, %s, %s, %s, %s, %s) RETURNING id;
+                INSERT INTO Applicant_data (first_name, last_name, email_id, phone, address, location_id,resume_name)
+                VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id;
             """, (data['first_name'], data['last_name'], data['email_id'], data['phone'], data.get('address', None),
-                  data['location_id']))
+                  data['location_id'],data['resume_name']))
             user_id = cur.fetchone()[0]
 
             for edu in data.get('education', []):

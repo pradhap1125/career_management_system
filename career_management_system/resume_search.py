@@ -16,7 +16,7 @@ def extract_text_from_pdf(pdf_path):
 
 def load_data(pdf_path):
     text = extract_text_from_pdf(pdf_path)
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=0)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=16, chunk_overlap=0)
     texts = text_splitter.split_text(text)
     return texts
 
@@ -26,8 +26,8 @@ def create_faiss_index(embeddings):
     index.add(np.array(embeddings))
     return index
 
-def search_faiss_index(index, query_embedding, filenames, k=2):
-    threshold = 0.4
+def search_faiss_index(index, query_embedding, filenames, k=10):
+    threshold = 0.7
     distances, indices = index.search(np.array(query_embedding), k)
     filtered_results = [
         filenames[indices[0][i]]
@@ -53,6 +53,7 @@ def initial_vector_load():
 
 
     embeddings = model.encode(all_texts, normalize_embeddings=True)
+    embeddings = np.array(embeddings).astype('float32')
 
     index = create_faiss_index(embeddings)
 
@@ -61,6 +62,7 @@ def initial_vector_load():
 def search_resume(keyword):
     index = faiss.read_index("resume_index.faiss")
     query_embedding = model.encode([keyword], normalize_embeddings=True)
+    query_embedding = np.array(query_embedding).astype('float32')
     results = search_faiss_index(index, query_embedding, filenames)
 
     return list(set(results))
