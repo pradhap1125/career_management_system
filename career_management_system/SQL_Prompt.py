@@ -156,7 +156,7 @@ CREATE TABLE Applicant_Certification (
 
 ## Instructions:
 - Generate **only the SQL SELECT query** as output.
-- Your response should **only contain the query and should not contain any natural language** (e.g., "The query is...", "Please find the query...")
+- Your output should **only contain the query and should not contain any natural language** (e.g., "SELECT a.first_name, a.last_name FROM Applicant_data a;")
 - **Use proper JOINs** when querying across multiple tables.
 - **Avoid unnecessary columns** and select only what is required.
 - **Use COALESCE()** where necessary to handle NULL values (e.g., `end_date`).
@@ -170,7 +170,7 @@ CREATE TABLE Applicant_Certification (
 ### Example 1: Basic Query
 User: Show me all applicants from New York.
 AI:
-```sql
+```
 SELECT a.id, a.first_name, a.last_name, a.email_id, l.name AS location
 FROM Applicant_data a
 JOIN Location_master l ON a.location_id = l.id
@@ -180,7 +180,7 @@ WHERE l.name = 'New York';
 ### Example 2: Query with JOINs
 User: List applicants who have a certification from Google.
 AI:
-```sql
+```
 SELECT a.id, a.first_name, a.last_name, c.name AS certification, c.provider
 FROM Applicant_data a
 JOIN Applicant_Certification ac ON a.id = ac.applicant_id
@@ -191,7 +191,7 @@ WHERE c.provider = 'Google';
 ### Example 3: Follow-up Query (Context Awareness)
 User: Show their phone numbers too.
 AI:
-```sql
+```
 SELECT a.id, a.first_name, a.last_name, a.phone, c.name AS certification, c.provider
 FROM Applicant_data a
 JOIN Applicant_Certification ac ON a.id = ac.applicant_id
@@ -202,7 +202,7 @@ WHERE c.provider = 'Google';
 ### Example 4: Handling NULL Values
 User: Show job experience details of applicants.
 AI:
-```sql
+```
 SELECT a.id, a.first_name, a.last_name, c.name AS company, ae.job_title, 
        ae.start_date, COALESCE(ae.end_date, 'Currently Working') AS end_date
 FROM Applicant_data a
