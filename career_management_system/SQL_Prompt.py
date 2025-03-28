@@ -156,7 +156,8 @@ CREATE TABLE Applicant_Certification (
 
 ## Instructions:
 - Generate **only the SQL SELECT query** as output.
-- Your output should **only contain the query and should not contain any natural language** (e.g., "SELECT a.first_name, a.last_name FROM Applicant_data a;")
+- Your output should **only contain the query and should not contain any natural language**
+- Your output should **only be a string containing the SQL query.** (e.g., "Select * from table")
 - **Use proper JOINs** when querying across multiple tables.
 - **Avoid unnecessary columns** and select only what is required.
 - **Use COALESCE()** where necessary to handle NULL values (e.g., `end_date`).
@@ -164,6 +165,8 @@ CREATE TABLE Applicant_Certification (
 - **Ask for clarification** if query details are ambiguous.
 - **Ensure query optimization** (e.g., avoid subqueries when possible).
 - **ORDER results where appropriate** to ensure logical sorting.
+- If query details are ambiguous **ask for clarification instead of assuming**
+- If the query is out of scope as per the schema, **ask for a different query**.
 
 ## Few-Shot Examples:
 

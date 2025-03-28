@@ -12,7 +12,7 @@ app = Flask(__name__)
 def get_applicants():
     return dbService.get_applicants()
 
-@app.route("/api/applicant/login", methods=["POST"])
+@app.route("/api/login", methods=["POST"])
 def login():
     data = request.get_json()
     return dbService.login(data)
@@ -58,6 +58,7 @@ def search():
 def generateSql():
     data = request.get_json()
     generated_txt=generate_sql(data['query'])
+    generated_txt=generated_txt.replace("sql","").replace("```","")
     if is_valid_sql(generated_txt):
         return execute_query(generated_txt)
     else:
