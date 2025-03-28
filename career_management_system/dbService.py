@@ -4,6 +4,7 @@ import pandas as pd
 from flask import jsonify
 from psycopg_pool import ConnectionPool
 
+from career_management_system.HashService import hash_password
 
 DB_CONFIG = "dbname=Career_Management_System user=postgres password=Chottu@1125 host=localhost port=5432"
 pool = ConnectionPool(conninfo=DB_CONFIG, min_size=1, max_size=10)
@@ -256,3 +257,13 @@ def certification_master():
             json_list =  [{"id": s[0], "name": s[1]} for s in certification]
 
             return jsonify(json_list)
+
+def login(data):
+    with pool.connection()  as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT email_id, password FROM admin_data WHERE email_id = %s and password=%s", (data['email_id'],hash_password(data['password'],'acs57501')))
+            user = cur.fetchone()
+            if user:
+                return jsonify({"message": "Login successful"})
+            else:
+                raise Exception("Invalid credentials")

@@ -12,6 +12,11 @@ app = Flask(__name__)
 def get_applicants():
     return dbService.get_applicants()
 
+@app.route("/api/applicant/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    return dbService.login(data)
+
 @app.route("/api/applicant/<int:user_id>", methods=["GET"])
 def get_applicants_id(user_id):
     return dbService.get_applicants(user_id)

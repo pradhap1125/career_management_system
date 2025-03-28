@@ -5,7 +5,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
 import faiss
 
-# model = SentenceTransformer('all-MiniLM-L6-v2')
+#model = SentenceTransformer('all-MiniLM-L6-v2')
 #model = SentenceTransformer('C:\\Users\\pradh\\fine_tuned_sentence_transformer\\')
 model = SentenceTransformer('sentence-transformers/multi-qa-mpnet-base-dot-v1')
 filenames = []
