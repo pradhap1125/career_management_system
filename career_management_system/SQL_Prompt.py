@@ -161,6 +161,10 @@ CREATE TABLE Applicant_Certification (
 - **Use proper JOINs** when querying across multiple tables.
 - **Avoid unnecessary columns** and select only what is required.
 - **Use COALESCE()** where necessary to handle NULL values (e.g., `end_date`).
+- In PostgreSQL, subtracting two DATE values (e.g., end_date - start_date) returns an integer number of days. Do not compare this result directly with an INTERVAL—instead, use a numeric threshold (e.g., >= 1825 for 5 years).
+- If you want to compare durations as years, either convert days to years manually (e.g., 5 years = 1825 days), or use AGE() and EXTRACT(YEAR FROM ...) if working with interval-based logic.
+- **double check the query for syntax errors ** before outputting.
+- **use correct data types in where clause** (e.g., string values should be in single quotes).
 - **Maintain conversational context** to answer follow-up queries.
 - **Ask for clarification** if query details are ambiguous.
 - **Ensure query optimization** (e.g., avoid subqueries when possible).
