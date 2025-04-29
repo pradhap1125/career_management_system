@@ -32,7 +32,7 @@ def search_faiss_index(index, query_embedding, filenames, k=10):
     filtered_results = [
         filenames[indices[0][i]]
         for i in range(len(indices[0]))
-        if distances[0][i] >= threshold and indices[0][i] < len(filenames)
+        if distances[0][i] >= threshold
     ]
 
     return filtered_results
