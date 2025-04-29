@@ -8,7 +8,7 @@ def hash_password(password: str, secret_key: str) -> str:
     return base64.b64encode(hashed).decode()
 
 
-# password = "password"
-# secret_key = "acs57501"
-# hashed_password = hash_password(password, secret_key)
-# print("Hashed Password:", hashed_password)
+password = "password"
+secret_key = "acs57501"
+hashed_password = hash_password(password, secret_key)
+print("Hashed Password:", hashed_password)

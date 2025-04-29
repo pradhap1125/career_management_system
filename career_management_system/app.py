@@ -5,8 +5,10 @@ from career_management_system.dbService import execute_query
 from career_management_system.pdf_processor import process_pdf
 from career_management_system.resume_search import search_resume
 from career_management_system.sql_generation_llm import generate_sql, is_valid_sql
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/api/applicant", methods=["GET"])
 def get_applicants():
@@ -74,7 +76,7 @@ def education_master():
 
 @app.route('/api/companymaster', methods=['GET'])
 def company_master():
-    return dbService.experience_master()
+    return dbService.company_master()
 
 @app.route('/api/certificationmaster', methods=['GET'])
 def certification_master():

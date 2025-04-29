@@ -4,7 +4,7 @@ from career_management_system.resume_search import load_data, model, filenames
 
 
 def process_pdf(file):
-    resume_dir = "D:\\resume_test\\"
+    resume_dir = "/Users/dheerajkandikattu/Documents/DataBaseProjectPython"
     file.save(resume_dir+file.filename)
     texts=load_data(resume_dir+file.filename)
     for text in texts:

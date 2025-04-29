@@ -6,7 +6,7 @@ from psycopg_pool import ConnectionPool
 
 from career_management_system.HashService import hash_password
 
-DB_CONFIG = "dbname=Career_Management_System user=postgres password=Chottu@1125 host=localhost port=5432"
+DB_CONFIG = "dbname=CareerManagementSystem user=postgres password=250620 host=localhost port=5432"
 pool = ConnectionPool(conninfo=DB_CONFIG, min_size=1, max_size=10)
 
 
@@ -210,9 +210,9 @@ def skill_master():
 def location_master():
     with pool.connection()  as conn:
         with conn.cursor() as cur:
-            cur.execute("SELECT id, name FROM location_master")
+            cur.execute("SELECT id, name,state,country FROM location_master")
             location = cur.fetchall()
-            json_list = [{"id": s[0], "name": s[1]} for s in location]
+            json_list = [{"id": s[0], "city": s[1],"state":s[2],"country":s[3]} for s in location]
             return jsonify(json_list)
 
 def education_master():
