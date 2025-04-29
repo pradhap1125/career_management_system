@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
 
 from career_management_system import dbService
-from career_management_system.dbService import execute_query
-from career_management_system.pdf_processor import process_pdf
+from career_management_system.dbService import execute_query, get_resume_name
+from career_management_system.pdf_processor import process_pdf, delete_pdf
 from career_management_system.resume_search import search_resume
 from career_management_system.sql_generation_llm import generate_sql, is_valid_sql
 from flask_cors import CORS
@@ -36,6 +36,9 @@ def update_applicant(user_id):
 
 @app.route("/api/applicant/<int:user_id>", methods=["DELETE"])
 def delete_applicant(user_id):
+    resume_name=get_resume_name(user_id)
+    if resume_name:
+        delete_pdf(resume_name)
     return dbService.delete_applicant(user_id)
 
 @app.route('/api/uploadresume', methods=['POST'])

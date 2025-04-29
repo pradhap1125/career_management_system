@@ -32,14 +32,14 @@ def search_faiss_index(index, query_embedding, filenames, k=10):
     filtered_results = [
         filenames[indices[0][i]]
         for i in range(len(indices[0]))
-        if distances[0][i] >= threshold
+        if distances[0][i] >= threshold and indices[0][i] < len(filenames)
     ]
 
     return filtered_results
 
 # Main Script
 def initial_vector_load():
-    resume_dir = "/Users/dheerajkandikattu/Documents/DataBaseProjectPython"
+    resume_dir = "D:\\resume_test"
     all_texts = []
     global filenames
 #    model.fit

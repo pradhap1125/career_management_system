@@ -6,7 +6,7 @@ from psycopg_pool import ConnectionPool
 
 from career_management_system.HashService import hash_password
 
-DB_CONFIG = "dbname=CareerManagementSystem user=postgres password=250620 host=localhost port=5432"
+DB_CONFIG = "dbname=Career_Management_System user=postgres password=Chottu@1125 host=localhost port=5432"
 pool = ConnectionPool(conninfo=DB_CONFIG, min_size=1, max_size=10)
 
 
@@ -174,6 +174,20 @@ def update_applicant(user_id,data):
         return jsonify({"id":user_id})
     else:
         raise Exception("User not found")
+
+def get_resume_name(user_id):
+    with pool.connection()  as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT resume_name
+                FROM Applicant_data 
+                WHERE id = %s;
+            """, (user_id,))
+            resume_name = cur.fetchone()
+            if resume_name:
+                return resume_name[0]
+            else:
+                raise Exception("User not found")
 
 def delete_applicant(user_id):
     with pool.connection()  as conn:
