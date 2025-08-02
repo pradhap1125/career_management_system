@@ -8,7 +8,7 @@ import sqlparse
 import google.generativeai as genai
 
 
-os.environ["GOOGLE_API_KEY"] = "AIzaSyCc9noPrPB201ffHU7V-iwDQUk5xkIh5uw"
+os.environ["GOOGLE_API_KEY"] = "<key>"
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 # Load LLaMA model and tokenizer
 model= ChatGoogleGenerativeAI(
